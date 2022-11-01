@@ -1,20 +1,29 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import ReactDOM from "react-dom";
+import { MoralisProvider } from "react-moralis";
+import { useMoralis } from "react-moralis";
 
-export default function App() {
+ReactDOM.render(
+ <MoralisProvider appId="xxxxxxxx" serverUrl="xxxxxxxx">
+  <App />
+ </MoralisProvider>,
+ document.getElementById("root"),
+);
+
+function App() {
+ const { authenticate, isAuthenticated, user } = useMoralis();
+
+ if (!isAuthenticated) {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+   <div>
+    <button onClick={() => authenticate()}>Authenticate</button>
+   </div>
   );
-}
+ }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+ return (
+  <div>
+   <h1>Welcome {user.get("username")}</h1>
+  </div>
+ );
+}
